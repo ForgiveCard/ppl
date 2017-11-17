@@ -2,7 +2,7 @@
 local MainScene = class("MainScene", function()
 
 	local scene = cc.Scene:createWithPhysics()
-    scene:getPhysicsWorld():setDebugDrawMask(cc.PhysicsWorld.DEBUGDRAW_ALL)
+    --scene:getPhysicsWorld():setDebugDrawMask(cc.PhysicsWorld.DEBUGDRAW_ALL)
     --0,0不受到重力的影响
     scene:getPhysicsWorld():setGravity(cc.p(0,0))
     return scene
@@ -363,6 +363,7 @@ function MainScene:GameOver()
       layer:removeFromParent()
       label:removeFromParent()
       self.bgLayer:addBall()
+      round=0
     end))
   label:runAction(labelAction)
   self:addChild(layer)

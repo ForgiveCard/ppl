@@ -23,7 +23,7 @@ local sqtr=1.4
 
 
 function BALLsLayer:ctor()
- math.randomseed(tostring(os.time()):reverse():sub(1, 7))
+ math.randomseed(tostring(os.time()):reverse():sub(1, 8))
 end
 
 -------------------------------检测相同的珠子--------------------------
@@ -237,11 +237,11 @@ end
 -------------------------------------------end--------------------------------------
 ---------------------------------------除去相同的珠子-------------------------------
 function BALLsLayer:removeSame()
-  if #Remove>2 then 
+  if #Remove>2  or self.sp.index==7 then 
 
     self:performWithDelay(function()
                Remove={}
-                self:down()
+               self:down()
         end,0.1*(#Remove+1))
 
     for i=1,#Remove,1 do
@@ -278,6 +278,193 @@ function BALLsLayer:removeSame()
   end
 end
 ---------------------------------------end-----------------------------------
+
+function BALLsLayer:boomCheck(w,x,y)
+  ---------------------------------左上--------------------------------
+  if w=="j" and x>1 then
+    if top =="j" and y>1 then
+
+     if T.o[y-1][x-1] ~=nil then
+      if  T.o[y-1][x-1].selected==false then
+        T.o[y-1][x-1].selected=true
+        table.insert(Remove, T.o[y-1][x-1]) 
+      end
+     end
+
+   elseif top=="o" then
+     if T.o[y][x-1] ~=nil then
+      if  T.o[y][x-1].selected==false then
+        T.o[y][x-1].selected=true
+        table.insert(Remove, T.o[y][x-1]) 
+      end
+     end
+   end
+  elseif w=="o" then
+    if top =="j" then
+
+     if T.j[y][x] ~=nil then
+      if T.j[y][x].selected==false then
+        T.j[y][x].selected=true
+        table.insert(Remove, T.j[y][x]) 
+      end
+     end
+
+    elseif top=="o" and y>1 then
+      if T.j[y-1][x] ~=nil then
+        if T.j[y-1][x].selected==false then
+          T.j[y-1][x].selected=true
+          table.insert(Remove, T.j[y-1][x]) 
+        end
+      end
+    end
+  end
+  ---------------------------------右上--------------------------------
+  if w=="j"  and x<9 then
+    if top=="j" and y>1 then
+
+      if T.o[y-1][x] ~=nil then
+        if T.o[y-1][x].selected==false then 
+          T.o[y-1][x].selected=true
+          table.insert(Remove,T.o[y-1][x]) 
+        end      
+      end
+
+    elseif top=="o" then
+      if T.o[y][x] ~=nil then
+        if T.o[y][x].selected==false then 
+          T.o[y][x].selected=true
+          table.insert(Remove,T.o[y][x]) 
+        end      
+      end
+    end
+  elseif w=="o" then
+    if top=="j" then
+
+     if T.j[y][x+1] ~=nil then
+      if T.j[y][x+1].selected==false then
+        T.j[y][x+1].selected=true
+        table.insert(Remove, T.j[y][x+1]) 
+      end
+     end
+
+   elseif top=="o" and y>1 then
+     if T.j[y-1][x+1] ~=nil then
+      if T.j[y-1][x+1].selected==false then
+        T.j[y-1][x+1].selected=true
+        table.insert(Remove, T.j[y-1][x+1]) 
+      end
+     end
+   end
+  end
+  ----------------------------------左---------------------------------
+  if w=="j" and x>1 then
+    if T.j[y][x-1] ~=nil then
+      if T.j[y][x-1].selected==false  then
+        T.j[y][x-1].selected=true
+        table.insert(Remove,T.j[y][x-1]) 
+      end   
+    end   
+  elseif w=="o" and x>1 then
+     if T.o[y][x-1] ~=nil then
+      if T.o[y][x-1].selected==false then
+        T.o[y][x-1].selected=true
+        table.insert(Remove, T.o[y][x-1]) 
+      end
+     end
+  end
+  ----------------------------------右---------------------------------
+  if w=="j" and x<9 then
+    if T.j[y][x+1] ~=nil then
+      if T.j[y][x+1].selected==false then
+        T.j[y][x+1].selected=true
+        table.insert(Remove, T.j[y][x+1]) 
+      end   
+    end  
+  elseif w=="o" and x<8 then
+     if T.o[y][x+1] ~=nil then
+      if T.o[y][x+1].selected==false then
+        T.o[y][x+1].selected=true
+        table.insert(Remove, T.o[y][x+1]) 
+      end
+     end 
+  end
+  ---------------------------------左下--------------------------------
+  if w=="j" and y<6 and x>1 then
+    if top =="j" then
+
+      if T.o[y][x-1] ~=nil then
+        if T.o[y][x-1].selected==false then
+          T.o[y][x-1].selected=true
+          table.insert(Remove, T.o[y][x-1]) 
+        end 
+      end  
+
+    elseif top=="o" then
+      if T.o[y+1][x-1] ~=nil then
+        if T.o[y+1][x-1].selected==false then
+          T.o[y+1][x-1].selected=true
+          table.insert(Remove, T.o[y+1][x-1]) 
+        end 
+      end  
+    end
+  elseif w=="o" and y<6 then
+    if top=="j" then
+
+     if T.j[y+1][x] ~=nil then
+      if T.j[y+1][x].selected==false then
+        T.j[y+1][x].selected=true
+        table.insert(Remove, T.j[y+1][x]) 
+      end
+     end
+
+    elseif top=="o" then
+     if T.j[y][x] ~=nil then
+      if T.j[y][x].selected==false then
+        T.j[y][x].selected=true
+        table.insert(Remove, T.j[y][x]) 
+      end
+     end
+    end
+  end
+  ---------------------------------右下--------------------------------
+  if w=="j" and y<6 and x<9 then
+    if top=="j" then
+
+      if T.o[y][x] ~=nil then
+        if T.o[y][x].selected==false then
+          T.o[y][x].selected=true
+          table.insert(Remove, T.o[y][x]) 
+        end      
+      end
+
+    elseif top=="o" then
+      if T.o[y+1][x] ~=nil then
+        if T.o[y+1][x].selected==false then
+          T.o[y+1][x].selected=true
+          table.insert(Remove, T.o[y+1][x]) 
+        end      
+      end
+    end
+  elseif w=="o" and y<6 then
+    if top=="j" then
+
+     if T.j[y+1][x+1] ~=nil then
+      if T.j[y+1][x+1].selected==false then
+        T.j[y+1][x+1].selected=true
+        table.insert(Remove, T.j[y+1][x+1]) 
+      end
+     end
+
+    elseif top=="o" then
+      if T.j[y][x+1] ~=nil then
+        if T.j[y][x+1].selected==false then
+          T.j[y][x+1].selected=true
+          table.insert(Remove, T.j[y][x+1]) 
+        end
+     end
+    end
+  end
+end
 
 ---------------------------------检测可掉落的珠子----------------------------
 function BALLsLayer:downCheck(w,x,y)
@@ -592,7 +779,7 @@ function BALLsLayer:addNewBall()
              local act1=cc.RotateBy:create(0.2, 360)           
              local action=cc.Sequence:create(cc.Spawn:create(act,act1),cc.CallFunc:create(function ()
                 local num=preview[i].index
-                local newnum=math.round(math.random()*999)%7
+                local newnum=math.round(math.random()*999)%8
                 preview[i]:setPosition(i*64,48)
 
                 for i=3,1,-1 do
@@ -653,7 +840,6 @@ T={j={},o={}}
 preview={}
 previewFight={}
 previewIndex={}
-round=0
 top="j"
 -----------------------------------end----------------------------------
     local sp
@@ -695,7 +881,7 @@ top="j"
     end
     end
 ---------------------------------加入准备射出的珠子------------------------------
-  local num=math.round(math.random()*999)%7
+  local num=math.round(math.random()*999)%8
   self.sp=ball.new(nil,0,0,num)
   self.sp:pos(sizeL.width/2,48)
   local Bbody=cc.PhysicsBody:createCircle(32,cc.PHYSICSBODY_MATERIAL_DEFAULT,cc.p(0,0))
@@ -877,9 +1063,15 @@ end
 --------------------------------------end----------------------------------
 --------------------------珠子碰撞完后进行消除的检测-----------------------
 function BALLsLayer:StopDisposure()
+  
    self.sp.selected=true
    table.insert(Remove,self.sp) 
-   self:Check(self.sp:getNum())
+   if self.sp.index==7 then
+    print("yes")
+   self:boomCheck(self.sp:getNum())
+   else
+    self:Check(self.sp:getNum())
+   end
    self:removeSame()
 end
 --------------------------------------end----------------------------------

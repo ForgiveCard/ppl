@@ -1084,14 +1084,14 @@ function BALLsLayer:OverCheck()
           else
 
             if top=="j" then
-              for i=1,9 do
+              for i=1,8 do
                 if T.o[6][i]~=nil then
                   return true
                 end
               end
             else
               if top=="o" then
-                for i=1,8 do
+                for i=1,9 do
                   if T.j[6][i]~=nil then
                     return true
                   end
